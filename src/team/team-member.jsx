@@ -1,8 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function TeamMember() {
+export default function TeamSummary() {
   const navigate = useNavigate();
+
+  const sidebarItems = [
+    { label: "Dashboard", icon: "▦" },
+    { label: "Teams Summary", icon: "👥", active: true },
+    { label: "Tasks", icon: "📋" },
+    { label: "Teams Board", icon: "📚" },
+    { label: "Tasks Record", icon: "🗂" },
+    { label: "Events", icon: "📅" },
+  ];
 
   const teamTasks = [
     { task: "Revise: Chapter 1", dueDate: "Jan 25, 2025", time: "8:00 AM", revisions: "No Revisions" },
@@ -21,97 +30,94 @@ export default function TeamMember() {
     { name: "John Reagan S Pinpin", role: "Member" },
   ];
 
-  // Pie chart segments data and colors
   const progressSegments = [
     { label: "To Do", color: "#FFB800", value: 20 },
     { label: "In Progress", color: "#758E25", value: 20 },
     { label: "To Review", color: "#5381B9", value: 20 },
     { label: "Completed", color: "#A36BC4", value: 40 },
-    // Missed is 0, so not shown
   ];
 
-  // Total progress percentage (Completed)
   const completedPercent = 40;
 
-  // Function to generate pie chart slices using conic-gradient for a donut style pie chart
-  // Using cumulative degrees
-  const pieChartStyle = () => {
-    let total = 0;
-    const gradients = progressSegments.map(({ color, value }) => {
-      const start = total;
-      const end = total + value;
-      total += value;
-      return `${color} ${start * 3.6}deg ${end * 3.6}deg`;
-    });
-    return {
-      background: `conic-gradient(${gradients.join(", ")})`,
-    };
-  };
+  // Calculate pie chart conic-gradient background
+  let total = 0;
+  const gradients = progressSegments.map(({ color, value }) => {
+    const start = total;
+    const end = total + value;
+    total += value;
+    return `${color} ${start * 3.6}deg ${end * 3.6}deg`;
+  });
+  const pieChartStyle = { background: `conic-gradient(${gradients.join(", ")})` };
 
   return (
-    <div className="team-member-wrapper">
-      {/* Header */}
+    <div className="wrapper">
       <header className="header">
-        <div className="logo" onClick={() => navigate("/tasksphere-it")}>
-          <div className="logo-icon">
-            <svg width="30" height="30" viewBox="0 0 50 50" fill="#490000" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="6" />
-              <circle cx="38" cy="12" r="6" />
-              <path d="M7 30 L25 48 L43 30 Z" fill="#490000" />
-            </svg>
-          </div>
+        <div className="logo" onClick={() => navigate("/")}>
+          <svg width="30" height="30" viewBox="0 0 50 50" fill="#490000" xmlns="http://www.w3.org/2000/svg" aria-label="Logo" role="img">
+            <circle cx="12" cy="12" r="6" />
+            <circle cx="38" cy="12" r="6" />
+            <path d="M7 30 L25 48 L43 30 Z" fill="#490000" />
+          </svg>
           <span>TaskSphere IT</span>
         </div>
-
         <div className="header-icons">
-          <button className="team-toggle" title="Toggle Team">TEAM</button>
-          <button className="notifications" title="Notifications" aria-label="Notifications">🔔</button>
-          <button className="profile" title="User Profile" aria-label="User Profile">👤</button>
+          <button className="team-toggle" aria-label="Toggle Team View">TEAM</button>
+          <button title="Notifications" aria-label="Notifications">🔔</button>
+          <button title="User Profile" aria-label="User Profile">👤</button>
         </div>
       </header>
 
-      {/* Breadcrumb */}
-      <nav className="breadcrumb">
-        <span>👥 Teams Summary &gt; <b>Mendoza, Et Al</b></span>
-      </nav>
-
-      {/* Main content */}
-      <main className="main-content">
-        {/* Team Tasks */}
-        <section className="team-tasks">
-          <h3>Team Tasks</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>Task</th>
-                <th>Subtask</th>
-                <th>Due Date</th>
-                <th>Time</th>
-                <th>Revisions NO</th>
-                <th>Options</th>
-              </tr>
-            </thead>
-            <tbody>
-              {teamTasks.map((task, i) => (
-                <tr key={i}>
-                  <td>{i + 1}.</td>
-                  <td>{task.task}</td>
-                  <td></td>
-                  <td>{task.dueDate}</td>
-                  <td>{task.time}</td>
-                  <td>{task.revisions}</td>
-                  <td className="options">⋮</td>
-                </tr>
+      <div className="layout-container">
+        <aside className="sidebar" aria-label="Sidebar Navigation">
+          <nav>
+            <ul>
+              {sidebarItems.map(({ label, icon, active }, i) => (
+                <li key={i} className={active ? "active" : ""}>
+                  <span className="icon" aria-hidden="true">{icon}</span>
+                  <span>{label}</span>
+                </li>
               ))}
-            </tbody>
-          </table>
-        </section>
+            </ul>
+          </nav>
+          <button className="sign-out">↻ Sign Out</button>
+        </aside>
 
-        {/* Sidebar: Team and Task Progress */}
-        <aside className="sidebar">
+        <main className="main-content">
+
+          <section className="team-tasks" aria-labelledby="team-tasks-title">
+            <h3 id="team-tasks-title">Team Tasks</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>NO</th>
+                  <th>Task</th>
+                  <th>Subtask</th>
+                  <th>Due Date</th>
+                  <th>Time</th>
+                  <th>Revisions NO</th>
+                  <th>Options</th>
+                </tr>
+              </thead>
+              <tbody>
+                {teamTasks.map((task, i) => (
+                  <tr key={i}>
+                    <td>{i + 1}.</td>
+                    <td>{task.task}</td>
+                    <td></td>
+                    <td>{task.dueDate}</td>
+                    <td>{task.time}</td>
+                    <td>{task.revisions}</td>
+                    <td className="options" aria-label="More options">⋮</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
+        </main>
+
+        <aside className="sidebar-right" aria-labelledby="team-members-title">
           <section className="team-members-section">
-            <h3>Team</h3>
+            <h3 id="team-members-title">Team</h3>
             <table>
               <thead>
                 <tr>
@@ -132,9 +138,9 @@ export default function TeamMember() {
             </table>
           </section>
 
-          <section className="tasks-progress">
-            <h3>Tasks Progress</h3>
-            <div className="pie-chart" style={pieChartStyle()}>
+          <section className="tasks-progress" aria-labelledby="tasks-progress-title">
+            <h3 id="tasks-progress-title">Tasks Progress</h3>
+            <div className="pie-chart" style={pieChartStyle} role="img" aria-label="Task progress pie chart">
               <div className="pie-center">
                 <span className="progress-percent">{completedPercent}%</span>
               </div>
@@ -143,55 +149,42 @@ export default function TeamMember() {
               {progressSegments.map(({ label, color }, i) => (
                 <div key={i} className="legend-item">
                   <span className="color-box" style={{ backgroundColor: color }}></span>
-                  <span className="legend-label">{label}</span>
+                  <span>{label}</span>
                 </div>
               ))}
             </div>
           </section>
         </aside>
-      </main>
+      </div>
 
-      {/* Footer */}
       <footer>
         <span>© 2025 TaskSphere IT - All Rights Reserved</span>
         <a href="/terms-of-service" className="tos-link">Terms of Service</a>
       </footer>
 
-      {/* Styles */}
       <style>{`
         * {
           box-sizing: border-box;
         }
-
-        body, html, #root, .team-member-wrapper {
-          height: 100%;
+        body, html, #root, .wrapper {
           margin: 0;
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           color: #3B0304;
           background: #fff;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
+          height: 100%;
         }
-
-        .team-member-wrapper {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 15px 20px;
+        .wrapper {
           display: flex;
           flex-direction: column;
           height: 100vh;
         }
-
-        /* Header */
         .header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding-bottom: 15px;
+          padding: 12px 18px;
           border-bottom: 1px solid #3B0304;
-          user-select: none;
         }
-
         .logo {
           display: flex;
           align-items: center;
@@ -201,20 +194,15 @@ export default function TeamMember() {
           font-size: 18px;
           cursor: pointer;
         }
-        .logo-icon {
-          width: 30px;
-          height: 30px;
-        }
-
         .header-icons button {
           background: none;
           border: none;
           cursor: pointer;
-          margin-left: 15px;
-          font-size: 16px;
+          margin-left: 10px;
+          font-size: 14px;
           color: #3B0304;
           font-weight: 600;
-          padding: 5px 10px;
+          padding: 4px 8px;
           border-radius: 15px;
           transition: background-color 0.2s ease;
         }
@@ -222,216 +210,273 @@ export default function TeamMember() {
           background-color: #7C0A02;
           color: white;
         }
-
-        /* Breadcrumb */
-        .breadcrumb {
-          padding: 10px 0;
-          font-size: 14px;
-          font-weight: 600;
-          border-bottom: 1px solid #7C0A02;
-          color: #3B0304;
-        }
-
-        /* Main content */
-        .main-content {
+        .layout-container {
+          flex: 1;
           display: flex;
-          flex-grow: 1;
-          padding: 20px 0;
-          gap: 25px;
+          overflow: hidden;
+          background: #fafafa;
         }
-
-        /* Team Tasks */
-        .team-tasks {
-          flex: 3;
-          border: 1px solid #ccc;
-          border-radius: 18px;
-          padding: 15px 20px;
-          box-shadow: 0 0 6px rgb(0 0 0 / 0.08);
+        /* Left Sidebar */
+        .sidebar {
+          width: 180px;
+          background: #fff;
+          border-right: 1px solid #ccc;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 10px 0;
+          font-size: 13px;
         }
-        .team-tasks h3 {
+        .sidebar nav ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        .sidebar nav li {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 20px;
+          cursor: pointer;
+          color: #490000;
+          font-weight: 600;
+          border-left: 3px solid transparent;
+          transition: background-color 0.2s ease, border-color 0.2s ease;
+          white-space: nowrap;
+        }
+        .sidebar nav li:hover {
+          background-color: #f7e4e4;
+        }
+        .sidebar nav li.active {
+          background-color: #7C0A02;
+          color: white;
+          border-left-color: white;
+        }
+        .sidebar nav li .icon {
+          font-weight: 900;
+          font-size: 16px;
+          user-select: none;
+        }
+        .sign-out {
+          background: none;
+          border: none;
+          padding: 10px 20px;
+          color: #7C0A02;
           font-weight: 700;
+          cursor: pointer;
+          text-align: left;
+          border-top: 1px solid #ccc;
+          margin-top: 10px;
+          user-select: none;
+        }
+        .sign-out:hover {
+          text-decoration: underline;
+        }
+        /* Main Content */
+        .main-content {
+          flex: 1;
+          padding: 20px 15px;
+          overflow-x: auto;
+          background: white;
+          display: flex;
+          flex-direction: column;
+        }
+        .breadcrumb {
+          font-size: 12px;
+          font-weight: 600;
           margin-bottom: 15px;
           border-bottom: 1px solid #7C0A02;
           padding-bottom: 5px;
+          white-space: nowrap;
+          color: #490000;
+        }
+        .team-tasks {
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          padding: 10px 12px;
+          box-shadow: 0 0 4px rgba(0,0,0,0.06);
+          font-size: 13px;
+          overflow-x: auto;
+          flex-grow: 1;
         }
         .team-tasks table {
           width: 100%;
           border-collapse: collapse;
-          font-size: 14px;
         }
         .team-tasks th, .team-tasks td {
-          text-align: left;
-          padding: 8px 10px;
+          padding: 5px 6px;
           border-bottom: 1px solid #ddd;
-          vertical-align: middle;
-          font-weight: 500;
+          font-size: 12px;
+          white-space: nowrap;
+          text-align: left;
         }
         .team-tasks th {
           font-weight: 600;
-          color: #3B0304;
         }
         .team-tasks td.options {
           text-align: center;
           cursor: pointer;
-          font-weight: 900;
+          font-weight: bold;
           color: #7C0A02;
+          white-space: nowrap;
         }
-
-        /* Sidebar */
-        .sidebar {
-          flex: 1;
+        /* Right Sidebar */
+        .sidebar-right {
+          width: 320px;
+          background: #fff;
+          border-left: 1px solid #ccc;
           display: flex;
           flex-direction: column;
-          gap: 30px;
+          gap: 15px;
+          padding: 15px 10px;
+          font-size: 13px;
         }
-
-        /* Team Members Table */
-        .team-members-section {
+        .team-members-section, .tasks-progress {
           border: 1px solid #ccc;
-          border-radius: 18px;
-          padding: 15px 20px;
-          box-shadow: 0 0 6px rgb(0 0 0 / 0.08);
-          background: #fff;
-        }
-        .team-members-section h3 {
-          font-weight: 700;
-          margin-bottom: 15px;
-          border-bottom: 1px solid #7C0A02;
-          padding-bottom: 5px;
+          border-radius: 10px;
+          padding: 12px 10px;
+          box-shadow: 0 0 4px rgba(0,0,0,0.06);
+          background: white;
+          font-size: 13px;
+          flex: none;
         }
         .team-members-section table {
           width: 100%;
           border-collapse: collapse;
-          font-size: 14px;
         }
         .team-members-section th, .team-members-section td {
-          text-align: left;
-          padding: 8px 10px;
+          padding: 5px 6px;
           border-bottom: 1px solid #ddd;
-          vertical-align: middle;
-          font-weight: 500;
+          font-size: 12px;
+          white-space: nowrap;
+          text-align: left;
         }
         .team-members-section th {
           font-weight: 600;
-          color: #3B0304;
         }
-
-        /* Tasks Progress */
         .tasks-progress {
-          border: 1px solid #ccc;
-          border-radius: 18px;
-          padding: 15px 20px;
-          box-shadow: 0 0 6px rgb(0 0 0 / 0.08);
-          background: #fff;
           text-align: center;
         }
-        .tasks-progress h3 {
-          font-weight: 700;
-          margin-bottom: 20px;
-          border-bottom: 1px solid #7C0A02;
-          padding-bottom: 5px;
-          color: #3B0304;
-        }
-
         .pie-chart {
-          width: 160px;
-          height: 160px;
+          width: 120px;
+          height: 120px;
           border-radius: 50%;
+          margin: 0 auto 10px;
           position: relative;
-          margin: 0 auto 20px;
-          background: conic-gradient(#A36BC4 0deg 144deg, #FFB800 144deg 216deg, #758E25 216deg 288deg, #5381B9 288deg 360deg);
-          /* The background will be overridden by style prop */
-          box-shadow: inset 0 0 20px rgba(255 255 255 / 0.3);
           display: flex;
-          justify-content: center;
           align-items: center;
+          justify-content: center;
+          box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3);
+          background: #ddd; /* fallback */
         }
-
         .pie-chart::before {
           content: "";
           position: absolute;
-          width: 90px;
-          height: 90px;
+          width: 75px;
+          height: 75px;
           background: white;
           border-radius: 50%;
           z-index: 2;
-          box-shadow: 0 0 6px rgb(0 0 0 / 0.15);
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
         }
-
         .pie-center {
           position: relative;
           z-index: 3;
-        }
-
-        .progress-percent {
-          font-size: 36px;
           font-weight: 900;
+          font-size: 22px;
           color: #490000;
-          user-select: none;
         }
-
-        /* Legend */
         .legend {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          gap: 10px 20px;
+          gap: 8px 15px;
+          font-size: 11px;
           font-weight: 700;
           color: #3B0304;
-          font-size: 13px;
-          user-select: none;
         }
-
         .legend-item {
           display: flex;
           align-items: center;
-          gap: 6px;
-          cursor: default;
+          gap: 5px;
         }
-
         .color-box {
-          display: inline-block;
-          width: 14px;
-          height: 14px;
+          width: 12px;
+          height: 12px;
           border-radius: 3px;
           border: 1px solid #ccc;
         }
-
-        /* Footer */
         footer {
           border-top: 1px solid #7C0A02;
-          padding: 10px 0 0;
+          padding: 8px 18px;
           display: flex;
           justify-content: space-between;
-          font-size: 13px;
+          font-size: 12px;
           font-weight: 600;
           color: #490000;
-          user-select: none;
+          background: #fff;
         }
-
         .tos-link {
           text-decoration: none;
           color: #7C0A02;
-          font-weight: 600;
-          cursor: pointer;
         }
-
         .tos-link:hover {
           text-decoration: underline;
         }
 
-        /* Responsive */
         @media (max-width: 900px) {
-          .main-content {
+          .layout-container {
             flex-direction: column;
           }
-          .sidebar {
-            flex-direction: row;
-            gap: 20px;
-            overflow-x: auto;
-          }
-          .team-tasks, .team-members-section, .tasks-progress {
+          .sidebar, .sidebar-right {
             width: 100%;
+            border: none;
+            padding: 10px 15px;
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+          }
+          .sidebar nav ul {
+            flex-direction: row;
+            display: flex;
+            gap: 15px;
+          }
+          .sidebar nav li {
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 8px 4px;
+          }
+          .sidebar nav li.active {
+            border-bottom-color: #7C0A02;
+            background-color: transparent;
+            color: #7C0A02;
+            border-left: none;
+          }
+          .sign-out {
+            margin-left: auto;
+            border-top: none;
+            padding: 8px 10px;
+            font-weight: 600;
+            color: #7C0A02;
+          }
+          .main-content {
+            padding: 15px 10px;
+            order: 3;
+          }
+          .team-tasks {
+            max-width: 100%;
+            margin-bottom: 20px;
+          }
+          .sidebar-right {
+            order: 2;
+            flex-wrap: nowrap;
+            gap: 10px;
+          }
+          .team-members-section, .tasks-progress {
+            flex: 1;
+            min-width: 200px;
           }
         }
       `}</style>
