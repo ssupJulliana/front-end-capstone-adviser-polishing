@@ -3,7 +3,7 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 
-import TeamSummary from './taskboard/tasksboard-memberx';  // only this import now
+import TeamSummary from './team/team-summary';  // only this import now
 
 function App() {
   return (
