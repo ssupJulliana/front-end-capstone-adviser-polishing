@@ -1,12 +1,9 @@
-// src/components/tasks/tasks.jsx
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import taskIcon from "../../assets/tasks-record-icon.png";
+import recordIcon from "../../assets/records-icon.png";
 
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import tasksIcon from "../../assets/tasks-icon.png";               // Header icon
-import recordIcon from "../../assets/records-icon.png";            // For defense cards
-import taskAllocationIcon from "../../assets/task-allocation-icon.png"; // New Task Allocation icon
-
-export default function Tasks() {
+export default function CapsTasksRecord() {
   const [status, setStatus] = useState("To Review");
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
   const statusDropdownRef = useRef(null);
@@ -51,89 +48,33 @@ export default function Tasks() {
   return (
     <div className="tasks-record-wrapper">
       <h2 className="section-title">
-        <img src={tasksIcon} alt="Tasks Icon" className="section-icon" />
-        Tasks
+        <img 
+          src={taskIcon} 
+          alt="Tasks Record Icon" 
+          className="section-icon" 
+        />
+        Tasks Record
       </h2>
       <hr className="divider" />
 
       <div className="tasks-record-container">
-        {/* Title Defense Card */}
-        <div
-          className="task-card"
-          onClick={() => handleCardClick("/title-tasks-record")}
-        >
-          <div className="task-card-icon">
-            <img
-              src={recordIcon}
-              alt="Title Defense Icon"
-              className="card-icon"
-            />
-          </div>
-          <div className="task-card-header">
-            <h3 className="task-title">
-              Title
-              <br />
-              Defense
-            </h3>
-          </div>
-        </div>
-
         {/* Oral Defense Card */}
-        <div
-          className="task-card"
-          onClick={() => handleCardClick("/oral-tasks-record")}
-        >
+        <div className="task-card" onClick={() => handleCardClick('/caps-oral-record')}>
           <div className="task-card-icon">
-            <img
-              src={recordIcon}
-              alt="Oral Defense Icon"
-              className="card-icon"
-            />
+            <img src={recordIcon} alt="Oral Defense Icon" className="card-icon" />
           </div>
           <div className="task-card-header">
-            <h3 className="task-title">
-              Oral
-              <br />
-              Defense
-            </h3>
+            <h3 className="task-title">Oral<br /> Defense</h3>
           </div>
         </div>
 
         {/* Final Defense Card */}
-        <div
-          className="task-card"
-          onClick={() => handleCardClick("/final-tasks-record")}
-        >
+        <div className="task-card" onClick={() => handleCardClick('/caps-final-record')}>
           <div className="task-card-icon">
-            <img
-              src={recordIcon}
-              alt="Final Defense Icon"
-              className="card-icon"
-            />
+            <img src={recordIcon} alt="Final Defense Icon" className="card-icon" />
           </div>
           <div className="task-card-header">
-            <h3 className="task-title">
-              Final
-              <br />
-              Defense
-            </h3>
-          </div>
-        </div>
-
-        {/* Task Allocation Card - NEW */}
-        <div
-          className="task-card"
-          onClick={() => handleCardClick("/task-allocation")}
-        >
-          <div className="task-card-icon">
-            <img
-              src={taskAllocationIcon}
-              alt="Task Allocation Icon"
-              className="card-icon"
-            />
-          </div>
-          <div className="task-card-header">
-            <h3 className="task-title">Tasks Allocation</h3>
+            <h3 className="task-title">Final<br /> Defense</h3>
           </div>
         </div>
       </div>
@@ -181,19 +122,17 @@ export default function Tasks() {
           background: #ffffff;
           border: 1px solid #B2B2B2;
           border-radius: 8px;
-          width: 150px;  
+          width: 150px;
           height: 200px;
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
           padding: 20px;
           cursor: pointer;
           position: relative;
-          margin: 0;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
           text-align: center;
-          transition: box-shadow 0.3s ease;
         }
 
         .task-card-icon {
@@ -201,7 +140,7 @@ export default function Tasks() {
         }
 
         .card-icon {
-          width: 50px; 
+          width: 50px;
           height: 50px;
           object-fit: contain;
         }
@@ -230,8 +169,8 @@ export default function Tasks() {
           bottom: 0;
           left: 0;
           width: 100%;
-          height: 22px; 
-          background-color: #3B0304; 
+          height: 22px;
+          background-color: #3B0304;
           border-bottom-left-radius: 8px;
           border-bottom-right-radius: 8px;
         }
