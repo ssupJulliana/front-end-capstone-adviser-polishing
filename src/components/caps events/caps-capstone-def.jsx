@@ -1,49 +1,101 @@
-import React from 'react';
-import eventIcon from '../../assets/events-icon.png';
+// src/components/caps events/caps-capstone-def.jsx
 
-const CapsCapstoneDef = () => {
+import React, { useState, useRef, useEffect } from 'react';
+import eventIcon from '../../assets/events-icon.png';
+import dropdownIcon from '../../assets/red-dropdown-icon.png';
+import teamIcon from '../../assets/teams-summary-icon.png';
+import panelistIcon from '../../assets/caps-ins-icon.png';
+import adviserIcon from '../../assets/adviser-icon.png';
+
+export default function CapsCapstoneDef() {
+  const [role, setRole] = useState("Adviser");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const ROLES = ["Adviser", "Panelist"];
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div className="events-wrapper">
-      {/* Header */}
       <h2 className="section-title">
-        <img 
-          src={eventIcon} 
-          alt="Events Icon" 
-          className="section-icon" 
-        />
+        <img src={eventIcon} alt="Events Icon" className="section-icon" />
         Capstone Defenses
       </h2>
       <hr className="divider" />
 
-      {/* Oral Defense */}
-      <h3 className="defense-header">Oral Defense</h3>
-      <div className="oral-defense-card">
-        <div className="team-name">Mendoza, Et Al</div>
+      {/* DROPDOWN */}
+      <div className="dropdown-container" ref={dropdownRef}>
+        <div className="role-selector" onClick={() => setShowDropdown(!showDropdown)}>
+          {role}
+          <img src={dropdownIcon} alt="Dropdown" className="dropdown-icon" />
+        </div>
+        {showDropdown && (
+          <div className="dropdown-menu">
+            {ROLES.map((opt) => (
+              <div
+                key={opt}
+                className="dropdown-item"
+                onClick={() => {
+                  setRole(opt);
+                  setShowDropdown(false);
+                }}
+              >
+                {opt}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
-        <div className="defense-row">
-          <div className="left-label">Title:</div>
-          <div className="right-label">Panelists:</div>
+      {/* ORAL DEFENSE CARD */}
+      <div className="oral-defense-card">
+        <div className="team-name">
+          <img src={teamIcon} alt="Team Icon" className="inline-icon" />
+          Mendoza, Et Al
         </div>
-        <div className="defense-row">
-          <div className="left-value">TaskSphere IT</div>
-          <div className="right-value">Anderson F. Dashiell</div>
-        </div>
-        <div className="defense-row">
-          <div className="left-label">Date:</div>
-          <div className="right-value">Adam B. Apostol</div>
-        </div>
-        <div className="defense-row">
-          <div className="left-value">March 31, 2025</div>
-          <div className="right-value">Von Jacob P. Yu</div>
-        </div>
-        <div className="defense-row">
-          <div className="left-label">Time:</div>
-          <div className="right-label">Status:</div>
-        </div>
-        <div className="defense-row">
-          <div className="left-value">1:00 PM - 3:00 PM</div>
-          <div className="right-value">
-            <span className="status-pending">Pending</span>
+
+        <div className="defense-grid">
+          {/* LEFT SIDE */}
+          <div className="left">
+            <div className="label">Title</div>
+            <div className="value">TaskSphere IT</div>
+
+            <div className="label">Date</div>
+            <div className="value">March 31, 2025</div>
+
+            <div className="label">Time</div>
+            <div className="value">1:00 PM – 3:00 PM</div>
+          </div>
+
+          {/* RIGHT SIDE */}
+          <div className="right">
+            <div className="label">Panelists</div>
+            <div className="panelist-entry">
+              <img src={panelistIcon} alt="Panelist Icon" className="inline-icon" />
+              Anderson F. Dashiell
+            </div>
+            <div className="panelist-entry">
+              <img src={adviserIcon} alt="Adviser Icon" className="inline-icon" />
+              Adam B. Apostol
+            </div>
+            <div className="panelist-entry">
+              <img src={adviserIcon} alt="Adviser Icon" className="inline-icon" />
+              Von Jacob P. Yu
+            </div>
+
+            <div className="label">Verdict</div>
+            <div className="value">
+              <span className="status-pending">Pending</span>
+            </div>
           </div>
         </div>
       </div>
@@ -67,7 +119,6 @@ const CapsCapstoneDef = () => {
         .section-icon {
           width: 24px;
           height: 24px;
-          object-fit: contain;
         }
 
         .divider {
@@ -76,62 +127,138 @@ const CapsCapstoneDef = () => {
           margin-bottom: 20px;
         }
 
-        .defense-header {
-          font-weight: bold;
-          color: #3B0304;
-          margin-bottom: 10px;
+        /* DROPDOWN */
+        .dropdown-container {
+          position: relative;
+          width: 160px;
+          margin-bottom: 20px;
         }
 
+        .role-selector {
+          background: #fff;
+          border: 1px solid #3B0304;
+          border-radius: 12px;
+          padding: 6px 12px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          color: #3B0304;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .dropdown-icon {
+          width: 14px;
+          height: 14px;
+          margin-left: 8px;
+        }
+
+        .dropdown-menu {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          background: #fff;
+          border: 1px solid #B2B2B2;
+          border-radius: 12px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+          margin-top: 10px;
+          width: 100%;
+          z-index: 5;
+        }
+
+        .dropdown-item {
+          padding: 10px 12px;
+          cursor: pointer;
+          font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+          background-color: #f0f0f0;
+        }
+
+        /* ORAL DEFENSE CARD */
         .oral-defense-card {
           background: #fff;
-          border-radius: 10px;
-          padding: 14px 16px;
-          border: 1px solid #ccc;
-          max-width: 400px;
-          width: 100%;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-          font-size: 13px;
+          border: 1px solid #B2B2B2;
+          border-radius: 16px;
+          padding: 20px 24px;
+          width: 350px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+          font-size: 14px;
         }
 
         .team-name {
           font-weight: bold;
-          font-size: 14px;
-          margin-bottom: 8px;
+          font-size: 16px;
+          margin-bottom: 12px;
           color: #3B0304;
-          text-align: left;
-        }
-
-        .defense-row {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          margin: 2px 0;
+          gap: 8px;
         }
 
-        .left-label,
-        .right-label {
+        .inline-icon {
+          width: 16px;
+          height: 16px;
+        }
+
+        .defense-grid {
+          display: grid;
+          grid-template-columns: 1.1fr 0.9fr;
+          gap: 16px;
+        }
+
+        .left, .right {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .label {
           font-weight: bold;
           color: #000;
+          margin-top: 8px;
         }
 
-        .left-value,
-        .right-value {
+        .label:first-of-type {
+          margin-top: 0;
+        }
+
+        .value {
           color: #000;
+          font-size: 14px;
+        }
+
+        .panelist-entry {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
         }
 
         .status-pending {
           display: inline-block;
-          padding: 3px 10px;
+          padding: 8px 44px;
           color: #3B0304;
-          border: 2px solid #3B0304;
-          border-radius: 4px;
+          border: 1px solid #3B0304;
+          border-radius: 8px;
           font-weight: bold;
           background-color: #fff;
-          font-size: 12px;
+          font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+          .defense-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+
+          .oral-defense-card {
+            padding: 16px;
+          }
         }
       `}</style>
     </div>
   );
-};
-
-export default CapsCapstoneDef;
+}
